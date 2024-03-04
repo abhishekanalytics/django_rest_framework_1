@@ -25,7 +25,7 @@ def task_detail(request, pk):
     try:
         tasks = Task.objects.get(pk=pk)
     except Task.DoesNotExist:
-        return Response({'massege':'Not Found'})
+        return Response({'massege':'Task Not Found'})
 
     if request.method == 'GET':
         serializer = TasksSerializer(tasks)
@@ -36,7 +36,7 @@ def task_detail(request, pk):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         tasks.delete()
-        return Response({'massege':'successfully deleted'})
+        return Response({'massege':'Successfully deleted'})
