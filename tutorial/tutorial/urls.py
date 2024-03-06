@@ -20,9 +20,10 @@ Including another URLconf
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
 # ]
-
+# from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
     path('', include('tasks.urls')),
+    path('',include('custom_user.urls'))
 ]
