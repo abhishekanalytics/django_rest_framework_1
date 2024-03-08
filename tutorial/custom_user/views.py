@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
+
 class UserListCreateView(APIView):
 
     def get(self, request):
@@ -19,11 +20,11 @@ class UserListCreateView(APIView):
             return Response(serializer.data, status=201)  
         return Response(serializer.errors, status=400)  
 
-class UserRetrieveUpdateDelete(APIView):
+class UserDetailView(APIView):
     def get_object(self, pk):       
         try:
             return CustomUser.objects.get(pk=pk)
-        except Task.DoesNotExist:
+        except CustomUser.DoesNotExist:
             raise Http404
     def get(self,request,pk,format=None):
         users=self.get_object(pk)
@@ -35,14 +36,13 @@ class UserRetrieveUpdateDelete(APIView):
         modified_data = request.data.copy()     
         modified_email = modified_data.pop('email', None)
         serializer = CustomUserSerializer(user, data=modified_data, partial=True)     
-        if serializer.is_valid():
-            if modified_email is not None:
-                serializer.validated_data['email'] = user.email
-            serializer.save()
-            return Response(serializer.data)     
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        if modified_email is not None:
+            serializer.validated_data['email'] = user.email
+        serializer.save()
+        return Response(serializer.data)
 
     def delete(self,request,pk,format=None):
         users=self.get_object(pk)
         users.delete()
-        return Response({'massege':'Successfully deleted'})
+        return Response({'message': 'Successfully deleted'})
