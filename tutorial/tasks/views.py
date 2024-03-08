@@ -43,4 +43,4 @@ class TaskDetail(APIView):
     def delete(self,request,pk,format=None):
         tasks=self.get_object(pk)
         tasks.delete()
-        return Response({'massege':'Successfully deleted'})
+        return Response({'message':'Successfully deleted'})
