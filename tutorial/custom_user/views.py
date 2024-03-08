@@ -6,6 +6,7 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 
+
 class UserListCreateView(APIView):
 
     def get(self, request):
