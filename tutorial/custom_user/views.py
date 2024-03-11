@@ -4,10 +4,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser
 from .serializers import CustomUserSerializer
+from django.shortcuts import get_object_or_404
 
 
 class UserListCreateView(APIView):
-
     def get(self, request):
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -22,10 +22,8 @@ class UserListCreateView(APIView):
 
 class UserDetailView(APIView):
     def get_object(self, pk):       
-        try:
-            return CustomUser.objects.get(pk=pk)
-        except CustomUser.DoesNotExist:
-            raise Http404
+        return get_object_or_404(CustomUser, pk=pk)
+    
     def get(self,request,pk,format=None):
         users=self.get_object(pk)
         serializer= CustomUserSerializer(users)
