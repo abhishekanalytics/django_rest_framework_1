@@ -4,13 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser
 from .serializers import CustomUserSerializer
-from .Custom_permissions import CustomPermission
-
 
 
 class UserListCreateView(APIView):
-    permission_classes=[CustomPermission]
-
     def get(self, request):
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -24,7 +20,6 @@ class UserListCreateView(APIView):
         return Response(serializer.errors, status=400)  
 
 class UserDetailView(APIView):
-    permission_classes=[CustomPermission]
     def get_object(self, pk):       
         try:
             return CustomUser.objects.get(pk=pk)
