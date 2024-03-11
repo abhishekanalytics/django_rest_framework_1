@@ -5,9 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 from django.shortcuts import get_object_or_404
+from .custom_permission import IsAdmin, IsManagerOrEmployee, IsOwnerOrAdminOrManager
 
 
 class UserListCreateView(APIView):
+    permission_classes=[IsAdmin]
     def get(self, request):
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -21,6 +23,7 @@ class UserListCreateView(APIView):
         return Response(serializer.errors, status=400)  
 
 class UserDetailView(APIView):
+
     def get_object(self, pk):       
         return get_object_or_404(CustomUser, pk=pk)
     
