@@ -1,18 +1,14 @@
 from rest_framework.permissions import BasePermission
+from .models import UserRoleEnum
 
-class IsAdmin(BasePermission):
+class admin_required(BasePermission):
     def has_permission(self, request, view):
-        return request.user.role == 'admin'
+        return request.user.role == UserRoleEnum.ADMIN.value
 
-class IsManagerOrEmployee(BasePermission):
+class manager_required(BasePermission):
     def has_permission(self, request, view):
-        return request.user.role in ['manager', 'employee']
+        return request.user.role in [UserRoleEnum.MANAGER.value, UserRoleEnum.Admin.value]
 
-class IsOwnerOrAdminOrManager(BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.user.role in ['admin', 'manager']:
-            return True
-        if request.user.role == 'manager' and obj.employee == request.user:
-            return True
-        return request.user.role == 'employee' and obj.employee == request.user
-
+class employee_required(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role in [UserRoleEnum.employee.value, UserRoleEnum.Admin.value]
