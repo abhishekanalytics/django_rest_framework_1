@@ -3,16 +3,13 @@ from django.db import models
 from enum import Enum
 from .manager import CustomUserManager
  
-class UserRoleEnum(Enum):
-    ADMIN = 'admin'
-    MANAGER = 'manager'
-    EMPLOYEE = 'employee'
+class UserRole(models.TextChoices):
+    ADMIN = 'admin', 'Admin'
+    MANAGER = 'manager', 'Manager'
+    EMPLOYEE = 'employee', 'Employee'
 
 class CustomUser(AbstractUser):  
-    ROLES = [
-        (role.value, role.name) for role in UserRoleEnum
-        ]
-    role = models.CharField(max_length=10, choices=ROLES, default=UserRoleEnum.ADMIN.value)
+    role = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.ADMIN)
     username=None
     email = models.EmailField(unique=True)
     phone_no = models.CharField(max_length=15, blank=True)

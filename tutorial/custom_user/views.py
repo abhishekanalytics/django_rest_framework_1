@@ -1,14 +1,14 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import CustomUser
-from .serializers import CustomUserSerializer,PartialCustomUserSerializer
 from django.shortcuts import get_object_or_404
-from .custom_permission import admin_required,manager_required,employee_required 
+from .models import CustomUser
+from .serializers import (CustomUserSerializer,UpdateUserSerializer)
+from .custom_permission import (admin_required,manager_required,employee_required) 
 
 
 class UserListCreateView(APIView):
-    permission_classes = [manager_required] 
+    permission_classes = [admin_required] 
 
     def get(self, request):
         users = CustomUser.objects.all()
@@ -36,7 +36,7 @@ class UserDetailView(APIView):
     def patch(self, request, pk, format=None):
         user = self.get_object(pk)
         modified_data = request.data.copy()
-        serializer = PartialCustomUserSerializer(user, data=modified_data, partial=True)
+        serializer = UpdateUserSerializer(user, data=modified_data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

@@ -7,7 +7,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id','username','email', 'first_name', 'last_name','phone_no','role')
 
-class PartialCustomUserSerializer(serializers.ModelSerializer):
+class UpdateUserSerializer(serializers.ModelSerializer):
         class Meta:
             model = CustomUser
             fields = ['first_name','last_name','phone_no']
