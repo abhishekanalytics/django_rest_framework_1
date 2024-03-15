@@ -11,3 +11,11 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         class Meta:
             model = CustomUser
             fields = ['first_name','last_name','phone_no']
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
