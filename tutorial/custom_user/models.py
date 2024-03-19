@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from enum import Enum
 from .manager import CustomUserManager
+from django.db import models
+import uuid
+
  
 class UserRole(models.TextChoices):
     ADMIN = 'admin', 'Admin'
@@ -13,6 +16,9 @@ class CustomUser(AbstractUser):
     username=None
     email = models.EmailField(unique=True)
     phone_no = models.CharField(max_length=15, blank=True)
+    password_reset_done = models.BooleanField(default=False)
+    reset_token_used = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
