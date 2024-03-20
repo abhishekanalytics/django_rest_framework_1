@@ -28,9 +28,3 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
-
-def is_valid_password(password):
-            has_number = bool(re.search(r'\d', password))
-            has_special = bool(re.search(r'[!@#$%^&*()_+{}\[\]:;<>,.?\/\\]', password))
-            has_upper = bool(re.search(r'[A-Z]', password))
-            is_long_enough = len(password) >= 8  
