@@ -1,6 +1,6 @@
 import json
 import re 
-from django.http import HttpResponseBadRequest,HttpResponse
+from django.http import(HttpResponseBadRequest,HttpResponse)
 from django.views.generic import TemplateView
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
@@ -98,7 +98,8 @@ class PasswordResetAPIView(APIView):
         if serializer.is_valid():
             email = serializer.validated_data['email']
             user = get_object_or_404(CustomUser, email=email, is_active=True)
-            
+            user.password_reset_done = False
+            user.save()
             reset_url = self._generate_reset_url(request, user)
             self._send_reset_email(user.email, reset_url)
             return Response({'message': 'Password reset email sent'}, status=status.HTTP_200_OK)
@@ -132,19 +133,19 @@ class PasswordResetConfirmView(TemplateView):
             new_password = request.POST.get('new_password')
             confirm_password = request.POST.get('confirm_password')
 
-            if new_password == confirm_password and is_valid_password(new_password):
-                user.set_password(new_password)
-                user.password_reset_done = False
-                user.save()
-                return render(request, self.template_name, {'uidb64': uidb64, 'token': token})
-
             if new_password != confirm_password:
-                error_message = "Password should be same "
+                error_message = "Passwords should be same"
             elif not is_valid_password(new_password):
                 error_message = "Password must be at least 8 characters long"
+            elif user.password_reset_done:
+                error_message = "Password reset has already been done for this user"
+            else:
+                user.set_password(new_password)
+                user.password_reset_done = True 
+                user.save()
+                return render(request, self.template_name, {'uidb64': uidb64, 'token': token})
             return HttpResponse(error_message, status=400)
-        
-        return HttpResponseBadRequest('Invalid user or token')
+        return HttpResponseBadRequest('You have already update password')
 
 def is_valid_password(password):
     is_long_enough = len(password) >= 8
