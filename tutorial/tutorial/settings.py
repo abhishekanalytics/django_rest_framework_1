@@ -1,4 +1,7 @@
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 """
 Django settings for tutorial project.
@@ -27,7 +30,8 @@ SECRET_KEY = 'django-insecure-%hm2yj3pgbp+)creqi0mc_yzy1=%-cl2@#(^63^&tg!5u8gw$c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =  ['ef9c-2405-201-4021-1a49-e55e-736d-d2dd-23b4.ngrok-free.app', "127.0.0.1",'localhost']
+CSRF_TRUSTED_ORIGINS = ['https://ef9c-2405-201-4021-1a49-e55e-736d-d2dd-23b4.ngrok-free.app']
 
 
 # Application definition
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     'tasks',
     'custom_user',
     'rest_framework_simplejwt',
+    'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -56,10 +61,11 @@ MIDDLEWARE = [
 ]
 ROOT_URLCONF = 'tutorial.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +77,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'tutorial.wsgi.application'
 
@@ -145,3 +152,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND') 
+EMAIL_HOST = os.getenv('EMAIL_HOST')  
+EMAIL_PORT = os.getenv('EMAIL_PORT') 
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')  
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL') 
