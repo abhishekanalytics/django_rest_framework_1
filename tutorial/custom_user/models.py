@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from enum import Enum
 from .manager import CustomUserManager
-from django.db import models
 import uuid
 
  

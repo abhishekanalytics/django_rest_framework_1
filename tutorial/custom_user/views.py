@@ -1,5 +1,6 @@
 import json
 import re 
+from.utils import is_valid_password
 from django.http import(HttpResponseBadRequest,HttpResponse)
 from django.views.generic import TemplateView
 from django.utils.http import urlsafe_base64_decode
@@ -123,11 +124,11 @@ class PasswordResetAPIView(APIView):
 
 class PasswordResetConfirmView(TemplateView):
     template_name = 'password_reset_confirm.html'
-
     def post(self, request, uidb64, token):
         User = get_user_model()
         uid = urlsafe_base64_decode(uidb64).decode()
         user = get_object_or_404(User, pk=uid) 
+        print(request.POST)
 
         if user is not None and default_token_generator.check_token(user, token):        
             new_password = request.POST.get('new_password')
@@ -146,7 +147,3 @@ class PasswordResetConfirmView(TemplateView):
                 return render(request, self.template_name, {'uidb64': uidb64, 'token': token})
             return HttpResponse(error_message, status=400)
         return HttpResponseBadRequest('You have already update password')
-
-def is_valid_password(password):
-    is_long_enough = len(password) >= 8
-    return  is_long_enough
